@@ -4,7 +4,9 @@ if (require("electron-squirrel-startup")) app.quit();
 const fs = require("fs");
 const path = require("path");
 const http = require("http");
+const QRCode = require("qrcode");
 const { name: packageName, version: packageVersion } = require("../package.json");
+const { createRemoteGateway } = require("./remote-gateway");
 
 const PORT = 3000;
 const MIN_SPLASH_MS = 900;
@@ -14,6 +16,7 @@ const isDev = !!process.env.ELECTRON_DEV;
 let mainWindow;
 let splashWindow;
 let server;
+let remoteGateway;
 
 function getSpeakerLibraryDir() {
   const base = process.env.APP_USER_DATA ?? process.cwd();
@@ -57,6 +60,8 @@ async function startServer() {
   const standaloneDir = path.join(appRoot, ".next", "standalone");
   process.env.APP_USER_DATA = app.getPath("userData");
   process.env.PORT = String(PORT);
+  // Only this machine talks to the app server; phones go through the PIN-protected remote gateway.
+  process.env.HOSTNAME = "127.0.0.1";
 
   // The standalone server.js calls process.chdir(__dirname) which fails
   // inside an asar archive. Override chdir to silently ignore asar paths.
@@ -250,6 +255,29 @@ ipcMain.handle("window:is-maximized", () => {
 
 ipcMain.handle("app:get-version", () => packageVersion);
 
+// --- Phone remote ---------------------------------------------------------
+
+async function getRemoteInfo() {
+  if (!remoteGateway) return null;
+  const info = remoteGateway.getInfo();
+  const qrCodes = await Promise.all(
+    info.urls.map((url) => QRCode.toString(url, { type: "svg", margin: 1, errorCorrectionLevel: "M" }))
+  );
+  return { ...info, qrCodes };
+}
+
+ipcMain.handle("remote:get-info", () => getRemoteInfo());
+
+ipcMain.handle("remote:set-enabled", (_event, enabled) => {
+  remoteGateway?.setEnabled(Boolean(enabled));
+  return getRemoteInfo();
+});
+
+ipcMain.handle("remote:regenerate-pin", () => {
+  remoteGateway?.regeneratePin();
+  return getRemoteInfo();
+});
+
 ipcMain.handle("app:get-platform", () => process.platform);
 
 ipcMain.handle("library:open-config-folder", async () => {
@@ -314,8 +342,14 @@ app.whenReady().then(() => {
   const splashShownAt = Date.now();
   const serverReady = isDev ? waitForDevServer() : startServer();
 
+  remoteGateway = createRemoteGateway({
+    configFile: path.join(app.getPath("userData"), "remote-access.json"),
+    targetPort: PORT
+  });
+
   serverReady
     .then(async () => {
+      remoteGateway.start();
       const url = `http://localhost:${PORT}`;
       setSplashStatus("Loading interface...");
 
@@ -353,5 +387,6 @@ app.whenReady().then(() => {
 
 app.on("window-all-closed", () => {
   if (server) server.close();
+  remoteGateway?.stop();
   app.quit();
 });

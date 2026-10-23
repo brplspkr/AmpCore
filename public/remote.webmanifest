@@ -1,0 +1,8 @@
+{
+  "name": "AmpCore Remote",
+  "short_name": "AmpCore",
+  "start_url": "/remote",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#121212"
+}

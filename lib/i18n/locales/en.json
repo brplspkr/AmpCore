@@ -426,6 +426,21 @@
         "importSlSuccessDesc": "Imported {name} and saved it to the library",
         "importSlFolderEmpty": "No .sl files found in the selected folder"
       }
+    },
+    "phoneRemote": {
+      "title": "Phone Remote",
+      "description": "Control levels and the system EQ from a phone or tablet on the same network as this computer.",
+      "enabled": "Allow phones and tablets to connect",
+      "scan": "Scan with the phone's camera, or open this address:",
+      "pin": "PIN",
+      "newPin": "New PIN",
+      "newPinHint": "A new PIN signs out every connected phone.",
+      "noNetwork": "This computer isn't connected to a network.",
+      "starting": "Starting…",
+      "copied": "Address copied",
+      "copy": "Copy address",
+      "otherAddresses": "Other network addresses",
+      "addToHome": "Tip: in Safari, tap Share › Add to Home Screen to use it like an app."
     }
   }
 }

@@ -18,6 +18,29 @@ This project combines:
 - Preset recall/store workflow
 - Electron packaging for Windows and macOS
 
+## Phone Remote
+
+Control output levels, mutes and one shared "system" input EQ from an iPhone, iPad or any phone browser.
+
+1. Start the AmpCore desktop app on a computer on the same network as the amps.
+2. Click the phone icon in the header. It shows an address, a QR code and a 6-digit PIN.
+3. Scan the QR code with the phone (or type the address into Safari) and enter the PIN.
+4. Optional: in Safari tap Share › Add to Home Screen to open it like an app.
+
+On macOS the first start asks whether AmpCore may accept incoming network connections. Click **Allow**, or phones can't connect.
+
+What the remote can do:
+
+- **Levels:** a fader, ±1 dB buttons and a mute per output channel, plus ±1 dB for all channels at once.
+- **System EQ:** a 10-band EQ (high-pass, 8 parametric bands, low-pass) that is pushed to the input EQ of every input you select. Drag the points on the curve, or pick a band and use the sliders. It replaces the input EQ on those inputs; output EQ and speaker presets are never touched. Use **Resend to amps** after an amp was power-cycled or its input EQ was changed elsewhere.
+
+How it is wired:
+
+- The app's own server only listens on `127.0.0.1:3000`.
+- `electron/remote-gateway.js` listens on port `8787` on the local network, requires the PIN (remembered by the phone for 30 days), rate-limits wrong PINs, and only forwards `/remote`, its assets and `/api/remote/*`.
+- `/api/remote/control` accepts only volume and mute commands. Everything else stays desktop-only.
+- The PIN and port are stored in `remote-access.json` in the app's user-data folder. "New PIN" signs out every phone.
+
 ## macOS Note
 
 The app is not notarized with Apple. After downloading and extracting the zip, macOS may block it.  

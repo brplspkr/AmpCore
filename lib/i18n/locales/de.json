@@ -426,6 +426,21 @@
         "importSlSuccessDesc": "{name} wurde importiert und in der Bibliothek gespeichert",
         "importSlFolderEmpty": "Keine .sl-Dateien im ausgewählten Ordner gefunden"
       }
+    },
+    "phoneRemote": {
+      "title": "Handy-Fernbedienung",
+      "description": "Pegel und System-EQ vom Handy oder Tablet im selben Netzwerk wie dieser Computer steuern.",
+      "enabled": "Verbindungen von Handys und Tablets erlauben",
+      "scan": "Mit der Handy-Kamera scannen oder diese Adresse öffnen:",
+      "pin": "PIN",
+      "newPin": "Neue PIN",
+      "newPinHint": "Eine neue PIN meldet alle verbundenen Handys ab.",
+      "noNetwork": "Dieser Computer ist mit keinem Netzwerk verbunden.",
+      "starting": "Wird gestartet…",
+      "copied": "Adresse kopiert",
+      "copy": "Adresse kopieren",
+      "otherAddresses": "Weitere Netzwerkadressen",
+      "addToHome": "Tipp: In Safari auf Teilen › Zum Home-Bildschirm tippen, um es wie eine App zu nutzen."
     }
   }
 }

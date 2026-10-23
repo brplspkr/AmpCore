@@ -20,6 +20,7 @@ import { EditProjectDialog } from "@/components/dialogs/edit-project-dialog";
 import { DeleteProjectDialog } from "@/components/dialogs/delete-project-dialog";
 import { ModeToggle } from "@/components/custom/color-mode-toggle";
 import { LanguageModeToggle } from "@/components/custom/language-mode-toggle";
+import { PhoneRemoteButton } from "@/components/custom/phone-remote-button";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
@@ -169,6 +170,7 @@ export function Header({ lang, dictionary, projects = [], loading = false }: Hea
             <div className="app-region-no-drag flex items-center gap-2">
               {mounted ? (
                 <>
+                  <PhoneRemoteButton />
                   <ModeToggle />
                   <LanguageModeToggle
                     lang={lang}

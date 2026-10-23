@@ -10,6 +10,9 @@ contextBridge.exposeInMainWorld("electronWindow", {
   toggleMaximize: () => ipcRenderer.invoke("window:toggle-maximize"),
   close: () => ipcRenderer.invoke("window:close"),
   isMaximized: () => ipcRenderer.invoke("window:is-maximized"),
+  getRemoteInfo: () => ipcRenderer.invoke("remote:get-info"),
+  setRemoteEnabled: (enabled) => ipcRenderer.invoke("remote:set-enabled", enabled),
+  regenerateRemotePin: () => ipcRenderer.invoke("remote:regenerate-pin"),
   onMaximizedChange: (callback) => {
     const listener = (_event, maximized) => callback(Boolean(maximized));
     ipcRenderer.on("window:maximized-changed", listener);
