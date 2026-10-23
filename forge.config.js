@@ -76,9 +76,10 @@ module.exports = {
     {
       name: "@electron-forge/publisher-github",
       config: {
+        // CI publishes to whichever repository runs the workflow (forks included).
         repository: {
-          owner: "scalli007YT",
-          name: "AmpCore"
+          owner: (process.env.GITHUB_REPOSITORY ?? "scalli007YT/AmpCore").split("/")[0],
+          name: (process.env.GITHUB_REPOSITORY ?? "scalli007YT/AmpCore").split("/")[1]
         },
         prerelease: true,
         draft: true

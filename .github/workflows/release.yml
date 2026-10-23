@@ -17,6 +17,10 @@ jobs:
             platform: win32
           - os: macos-latest
             platform: darwin
+            arch: arm64
+          - os: macos-latest
+            platform: darwin
+            arch: x64
 
     runs-on: ${{ matrix.os }}
 
@@ -39,9 +43,9 @@ jobs:
         run: pnpm install --frozen-lockfile
         timeout-minutes: 10
 
-      - name: Publish (${{ matrix.platform }})
+      - name: Publish (${{ matrix.platform }} ${{ matrix.arch }})
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
-        run: pnpm exec electron-forge publish --platform ${{ matrix.platform }}
+        run: pnpm exec electron-forge publish --platform ${{ matrix.platform }} ${{ matrix.arch && format('--arch {0}', matrix.arch) || '' }}
         timeout-minutes: 30
