@@ -4,7 +4,6 @@ if (require("electron-squirrel-startup")) app.quit();
 const fs = require("fs");
 const path = require("path");
 const http = require("http");
-const QRCode = require("qrcode");
 const { name: packageName, version: packageVersion } = require("../package.json");
 const { createRemoteGateway } = require("./remote-gateway");
 
@@ -257,13 +256,9 @@ ipcMain.handle("app:get-version", () => packageVersion);
 
 // --- Phone remote ---------------------------------------------------------
 
-async function getRemoteInfo() {
-  if (!remoteGateway) return null;
-  const info = remoteGateway.getInfo();
-  const qrCodes = await Promise.all(
-    info.urls.map((url) => QRCode.toString(url, { type: "svg", margin: 1, errorCorrectionLevel: "M" }))
-  );
-  return { ...info, qrCodes };
+// Packaged builds ship no node_modules for the main process, so the QR code is drawn in the renderer.
+function getRemoteInfo() {
+  return remoteGateway ? remoteGateway.getInfo() : null;
 }
 
 ipcMain.handle("remote:get-info", () => getRemoteInfo());
